@@ -1,6 +1,6 @@
 <?php
 
-namespace app\src;
+namespace app\src\services;
 
 use Garden\Cli\Cli;
 
@@ -8,21 +8,23 @@ class Options
 {
     private int $time;
     private float $percent;
-    private int $scale;
+    private int|null $scale;
 
     public function __construct(array|null $argv = null)
     {
         $cli = new Cli();
 
         $cli->opt('u:u', 'min availability percentage', true)
-            ->opt('time:t', 'max response time (sec) - response time higher than value detects as failed', true, 'integer')
-            ->opt('scale:s', 'scale - requests count', true);
+            ->opt('time:t', 'max response time (ms) - response time higher than value detects as failed', true, 'integer')
+            ->opt('scale:s', 'scale - requests count', false);
 
         $args = $cli->parse($argv);
 
         $this->time = intval($args->getOpt('time'));
         $this->percent = floatval($args->getOpt('u'));
-        $this->scale = intval($args->getOpt('scale'));
+
+        $scale = $args->getOpt('scale');
+        $this->scale = is_numeric($scale) ? intval($scale) : null;
     }
 
     public function getTime(): int
@@ -35,7 +37,7 @@ class Options
         return $this->percent;
     }
 
-    public function getScale(): int
+    public function getScale(): int|null
     {
         return $this->scale;
     }
