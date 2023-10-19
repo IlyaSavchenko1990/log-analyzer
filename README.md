@@ -13,18 +13,20 @@
 
 ### Запуск
 
-Билд Docker-контейнера:
-```
-docker build -t analyzer .
-```
-
 Установка всех зависимостей composer (В корневой директории проекта):
 ```
 composer update
 ```
 или через docker:
 ```
+docker run --rm --interactive --tty --volume $PWD:/app composer update
+или (На некоторых платформах)
 docker run --rm -v $(pwd):/app composer update
+```
+
+Билд Docker-контейнера:
+```
+docker build -t analyzer .
 ```
 
 Для запуска используется команда:
